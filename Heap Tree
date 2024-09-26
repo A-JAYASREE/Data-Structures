@@ -1,0 +1,139 @@
+#include <stdio.h>
+// Min Heap
+void min_heapify(int arr[], int n, int i) {
+    int smallest = i;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+    if (left < n && arr[left] < arr[smallest])
+        smallest = left;
+    if (right < n && arr[right] < arr[smallest])
+        smallest = right;
+    if (smallest != i) {
+        int temp = arr[i];
+        arr[i] = arr[smallest];
+        arr[smallest] = temp;
+        min_heapify(arr, n, smallest);
+    }
+}
+void insert_min_heap(int arr[], int* n, int key) {
+int i,temp;
+    (*n)++;
+    arr[*n - 1] = key;
+     i = *n - 1;
+    while (i > 0 && arr[(i - 1) / 2] > arr[i]) {
+        temp = arr[i];
+        arr[i] = arr[(i - 1) / 2];
+        arr[(i - 1) / 2] = temp;
+        i = (i - 1) / 2;
+    }
+}
+
+void delete_min_heap(int arr[], int* n, int key) {
+    int i;
+    for (i = 0; i < *n; i++) {
+        if (arr[i] == key)
+            break;
+    }
+    arr[i] = arr[*n - 1];
+    (*n)--;
+    min_heapify(arr, *n, i);
+}
+
+void display_min_heap(int arr[], int n) {
+int  i;
+    printf("Min Heap: ");
+    for ( i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+    printf("\n");
+}
+
+// Max Heap
+void max_heapify(int arr[], int n, int i) {
+    int largest = i;
+int temp;
+    int left = 2 * i + 1;
+    int right = 2 * i + 2;
+
+    if (left < n && arr[left] > arr[largest])
+        largest = left;
+
+    if (right < n && arr[right] > arr[largest])
+        largest = right;
+
+    if (largest != i) {
+        temp = arr[i];
+        arr[i] = arr[largest];
+        arr[largest] = temp;
+        max_heapify(arr, n, largest);
+    }
+}
+void insert_max_heap(int arr[], int* n, int key) {
+int temp;
+    (*n)++;
+    arr[*n - 1] = key;
+    int i = *n - 1;
+    while (i > 0 && arr[(i - 1) / 2] < arr[i]) {
+        temp = arr[i];
+        arr[i] = arr[(i - 1) / 2];
+        arr[(i - 1) / 2] = temp;
+        i = (i - 1) / 2;
+    }
+}
+
+void delete_max_heap(int arr[], int* n, int key) {
+    int i;
+    for (i = 0; i < *n; i++) {
+        if (arr[i] == key)
+            break;
+    }
+    arr[i] = arr[*n - 1];
+    (*n)--;
+    max_heapify(arr, *n, i);
+}
+
+void display_max_heap(int arr[], int n) {
+int  i;
+    printf("Max Heap: ");
+    for ( i = 0; i < n; i++)
+        printf("%d ", arr[i]);
+    printf("\n");
+}
+
+int main() {
+    int min_heap[100] = {10, 20, 30, 40, 50};
+    int min_n = 5;
+    int max_heap[100] = {50, 40, 30, 20, 10};
+    int max_n = 5;
+    int i; 
+   clrscr( );
+
+    printf("Initial Min Heap: ");
+    for (i = 0; i < min_n; i++)
+        printf("%d ", min_heap[i]);
+    printf("\n");
+
+    printf("Initial Max Heap: ");
+    for (i = 0; i < max_n; i++)
+        printf("%d ", max_heap[i]);
+    printf("\n");
+
+    insert_min_heap(min_heap, &min_n, 5);
+    insert_max_heap(max_heap, &max_n, 55);
+
+    printf("Min Heap after insertion: ");
+    display_min_heap(min_heap, min_n);
+
+    printf("Max Heap after insertion: ");
+    display_max_heap(max_heap, max_n);
+
+    delete_min_heap(min_heap, &min_n, 10);
+    delete_max_heap(max_heap, &max_n, 10);
+
+    printf("Min Heap after deletion: ");
+    display_min_heap(min_heap, min_n);
+
+    printf("Max Heap after deletion: ");
+    display_max_heap(max_heap, max_n);
+getch();
+    return 0;
+}
