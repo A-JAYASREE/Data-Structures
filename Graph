@@ -1,0 +1,75 @@
+#include <stdio.h>
+#define MAX_VERTICES 10
+
+void DFT_Util_Matrix(int graph[MAX_VERTICES][MAX_VERTICES], int vertex, int visited[]);
+
+// Function to perform BFT
+void BFT_Matrix(int graph[MAX_VERTICES][MAX_VERTICES], int start) {
+int i;
+    int visited[MAX_VERTICES] = {0};
+    int queue[MAX_VERTICES];
+    int front = 0, rear = 0;
+
+    queue[rear++] = start;
+    visited[start] = 1;
+
+    while (front < rear) {
+        int vertex = queue[front++];
+        printf("%d ", vertex);
+
+        for ( i = 0; i < MAX_VERTICES; i++) {
+            if (graph[vertex][i] && !visited[i]) {
+                queue[rear++] = i;
+                visited[i] = 1;
+            }
+        }
+    }
+}
+
+// Function to perform DFT
+void DFT_Matrix(int graph[MAX_VERTICES][MAX_VERTICES], int start) {
+    int visited[MAX_VERTICES] = {0};
+
+    DFT_Util_Matrix(graph, start, visited);
+}
+
+void DFT_Util_Matrix(int graph[MAX_VERTICES][MAX_VERTICES], int vertex, int visited[]) {
+int i;
+    int visited[vertex] = 1;
+    printf("%d ", vertex);
+
+    for ( i = 0; i < MAX_VERTICES; i++) {
+        if (graph[vertex][i] && !visited[i]) {
+            DFT_Util_Matrix(graph, i, visited);
+        }
+    }
+}
+
+int main() {
+    int graph[MAX_VERTICES][MAX_VERTICES] = {0};
+int i,j;
+
+    // Initialize the graph for 5 vertices
+    int sampleGraph[5][5] = {
+        {0, 1, 1, 0, 0},
+        {1, 0, 0, 1, 0},
+        {1, 0, 0, 1, 1},
+        {0, 1, 1, 0, 1},
+        {0, 0, 1, 1, 0}
+    };
+
+    for (i = 0; i < 5; i++) {
+        for ( j = 0; j < 5; j++) {
+            graph[i][j] = sampleGraph[i][j];
+        }
+    }
+
+    printf("BFT Traversal: ");
+    BFT_Matrix(graph, 0);
+    printf("\n");
+
+    printf("DFT Traversal: ");
+    DFT_Matrix(graph, 0);
+    printf("\n");
+getch();
+    return 0;
