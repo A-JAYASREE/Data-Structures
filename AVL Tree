@@ -1,0 +1,96 @@
+#include <stdio.h> 
+#include <stdlib.h> 
+
+typedef struct Node { 
+    int key; 
+    struct Node* left; 
+    struct Node* right; 
+    int height; 
+} Node; 
+
+int getHeight(Node* node) { 
+    if (node == NULL) return 0; 
+    return node->height; 
+} 
+
+Node* insert(Node* node, int key) { 
+    if (node == NULL) { 
+        node = (Node*)malloc(sizeof(Node)); 
+        node->key = key; 
+        node->left = node->right = NULL; 
+        node->height = 1; 
+    } else if (key < node->key) { 
+        node->left = insert(node->left, key); 
+    } else if (key > node->key) { 
+        node->right = insert(node->right, key); 
+    } 
+    node->height = 1 + (getHeight(node->left) > getHeight(node->right) ? getHeight(node->left) : getHeight(node->right)); 
+    return node; 
+} 
+
+Node* delete(Node* node, int key) { 
+    if (node == NULL) return node; 
+    if (key < node->key) { 
+        node->left = delete(node->left, key); 
+    } else if (key > node->key) { 
+        node->right = delete(node->right, key); 
+    } else { 
+        if (node->left == NULL) { 
+            Node* temp = node->right; 
+            free(node); 
+            return temp; 
+        } else if (node->right == NULL) { 
+            Node* temp = node->left; 
+            free(node); 
+            return temp; 
+        } else { 
+            Node* temp = node->right; 
+            while (temp->left != NULL) temp = temp->left; 
+            node->key = temp->key; 
+            node->right = delete(node->right, temp->key); 
+        } 
+    } 
+    return node; 
+} 
+
+void inOrderTraversal(Node* node, FILE* file) { 
+    if (node != NULL) { 
+        inOrderTraversal(node->left, file); 
+        fprintf(file, "%d ", node->key); 
+        inOrderTraversal(node->right, file); 
+    } 
+} 
+
+int main() { 
+    FILE* inputFile = fopen("input.txt", "r"); 
+    FILE* outputFile;
+    Node* root;
+    int key;
+    
+    if (inputFile == NULL) { 
+        perror("Error opening input file"); 
+        return 1; 
+    } 
+
+    root = NULL; 
+
+    while (fscanf(inputFile, "%d", &key) == 1) { 
+        root = insert(root, key); 
+    } 
+    fclose(inputFile); 
+
+    outputFile = fopen("output.txt", "w"); 
+    if (outputFile == NULL) { 
+        perror("Error opening output file"); 
+        return 1; 
+    } 
+    inOrderTraversal(root, outputFile); 
+    fclose(outputFile); 
+
+    return 0; 
+}
+
+
+
+ 
+
